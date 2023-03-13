@@ -1,0 +1,8 @@
+	1	2	4	8	16	32	64
+1	usec	usec	usec	usec	usec	usec	usec
+2	nsec	nsec	nsec	usec	nsec	usec	usec
+4	nsec	nsec	nsec	nsec	nsec	usec	usec
+8	nsec	nsec	nsec	nsec	usec	usec	usec
+16	nsec	nsec	nsec	usec	usec	usec	usec
+32	nsec	usec	usec	usec	usec	usec	msec
+64	usec	usec	usec	usec	usec	msec	msec
