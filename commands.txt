@@ -1,0 +1,9 @@
+sudo chmod 666 /dev/parport0
+sudo modprobe parport_pc io=0xd010
+lsmod
+sudo modprobe -r parport_pc
+sudo modprobe -r lp
+sudo insmod ax99100.ko
+lspci -k
+sudo lspci -v
+
