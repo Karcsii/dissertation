@@ -7,8 +7,8 @@ import time
 
 block_size = [1, 2, 4, 8, 16, 32, 64]
 parallel_tasks = [1, 2, 4, 8, 16, 32, 64]
-mode = "read"
-name = "probaaxis"
+mode = "randwrite"
+name = "randwritehdd"
 lat_unit = "usec"
 thr_unit = "MiB/s"
 
@@ -23,6 +23,9 @@ p = parallel.Parallel()
 outdir = "./{name}".format(name = name)
 if not os.path.exists(outdir):
     os.mkdir(outdir)
+outdir = "./{name}fio".format(name = name)
+if not os.path.exists(outdir):
+    os.mkdir(outdir)
 p.setData(0x00)
 
 for x, num_of_blocks in enumerate(block_size):
@@ -33,11 +36,11 @@ for x, num_of_blocks in enumerate(block_size):
 	ThroughputUnitParallel = {}
 	for y, num_of_parallel in enumerate(parallel_tasks):
 		time.sleep(10)
-		command = "sudo fio --name={name} --ioengine=posixaio --rw=read --numjobs={parallel} --size=1g --iodepth={parallel} --runtime=60 --time_based --end_fsync=1 --bs={block}k --group_reporting".format(name = name, parallel = num_of_parallel, block = num_of_blocks)
+		command = "sudo fio --name={name} --ioengine=posixaio --rw=randwrite --numjobs={parallel} --size=1g --iodepth={parallel} --runtime=60 --time_based --end_fsync=1 --bs={block}k --group_reporting".format(name = name, parallel = num_of_parallel, block = num_of_blocks)
 		print("running test", (x)*len(parallel_tasks)+(y+1), '/', num_of_tests, "block size:", num_of_blocks, "parallel tasks:", num_of_parallel)
 		#result = subprocess.run(command.split(), stdout=subprocess.PIPE, cwd="{parent}/{name}/".format(name=name, parent=os.path.dirname(os.path.realpath(__file__))))
 		p.setData(0xFF)
-		result = subprocess.run(command.split(), stdout=subprocess.PIPE, cwd="./{name}/".format(name=name))
+		result = subprocess.run(command.split(), stdout=subprocess.PIPE, cwd="./{name}fio/".format(name=name))
 		p.setData(0x00)
 		output = result.stdout.decode('utf-8')
 		
@@ -59,7 +62,7 @@ for x, num_of_blocks in enumerate(block_size):
 		while (i<len(lines)):
 			item = lines[i]
 			i+=1
-			if item.startswith("   READ") or item.strip().startswith("   WRITE"):
+			if item.startswith("   READ") or item.startswith("  WRITE"):
 				throughput = item.strip()
 				break
 				
@@ -140,4 +143,5 @@ print("iops:", iops)
 print("throughputnumber:", throughputnumber)
 print("throughputunit:", throughputunit)
 
-
+command = "rm -r -f {name}fio/".format(name=name)
+result = subprocess.run(command.split(), stdout=subprocess.PIPE)
