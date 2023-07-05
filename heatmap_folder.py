@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-name = "seqread_ssd_backup"
+name = "randwrite_hdd_backup"
 folder = "C:/Users/Karcsi-Y720/Desktop/dissertation/"
 
 block_size = [1, 2, 4, 8, 16, 32, 64]
